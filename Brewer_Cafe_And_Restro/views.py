@@ -203,17 +203,18 @@ def validationLogin(username,password,username1,flag):
 def home(request):
     if 'user_name' in request.session:
         current_user = request.session['user_name']
-        object_list = Item.objects.all()
-        
-        param = {'current_user':current_user,'object_list':object_list}
-        return render(request,'home.html',param)
+        object_list = ItemCategory.objects.all()
+        param = {'current_user': current_user,'object_list':object_list}
+        return render(request, 'home.html', param)
     elif 'admin' in request.session:
         current_user = request.session['admin']
-        param = {'current_admin':current_user}
+        object_list = ItemCategory.objects.all()
+        param = {'current_admin':current_user,"object_list":object_list}
         return render(request,'home.html',param)
-    object_list = Item.objects.all()
     
-    return render(request, 'home.html')
+    object_list = ItemCategory.objects.all()
+    param = {'object_list':object_list}
+    return render(request, 'home.html', param)
 
 def error_404_view(request,exception):
     return render(request,'404.html')
@@ -591,18 +592,31 @@ def user_profile(request):
 
         return render(request,'user_profile.html',data)
 
-class CategoryListView(ListView):
-    model = ItemCategory
-    template_name = 'itemcategory_list.html'
-    queryset = ItemCategory.objects.all()
+# class CategoryListView(ListView):
+#     model = ItemCategory
+#     template_name = 'itemcategory_list.html'
+#     queryset = ItemCategory.objects.all()
 
-    def get_queryset(self):
-        q = self.request.GET.get('q')
-        if q:
-            object_list = self.model.objects.filter(Q(item_category_name__icontains=q) | Q(item_category_description__icontains=q))
-        else:
-            object_list = self.model.objects.all()
-        return object_list
+#     def get_queryset(self):
+#         q = self.request.GET.get('q')
+#         if q:
+#             pass
+#             # object_list = self.model.objects.filter(Q(item_category_name__icontains=q) | Q(item_category_description__icontains=q))
+#         else:
+#             object_list = self.model.objects.all()
+#         return object_list
+
+
+
+def CategoryListView(request):
+    if 'user_name' in request.session:
+        object_list = ItemCategory.objects.all()
+        context = {
+            "object_list":object_list
+
+        }
+        return render (request,"itemcategory_list.html",context)
+    
 
 class ItemListView(ListView):
     model = Item
@@ -748,6 +762,7 @@ def checkout(request):
     grand_total = 0
     total_offer_price = 0
     total_price = 0
+    
     for i in cartOfferItem:
         total_offer_price = total_offer_price + i.item_iditem.offer_price * i.item_qty
     
@@ -825,19 +840,64 @@ def placeorder(request):
             messages.success(request,"Your order has been placed successfully!")
     
     return redirect('home')
+import razorpay
+razorpay_client = razorpay.Client(auth=(os.getenv("RAZORPAY_API_KEY"), os.getenv("RAZORPAY_API_SECRET")))
+
+# def razorPayProcess(request):
+#     u1 = User.objects.get(user_name=request.session['user_name'])
+#     userId = u1.iduser
+#     cart = Cart.objects.filter(user_iduser=userId)
+#     total_price = 0
+#     amount = 5000
+#     client = razorpay.Client(
+#             auth=("rzp_test_cvtTXHmj1tE4Hz", "rtx2rSPfyWnAslO00uje43sG"))
+
+#     payment = client.order.create({'amount': amount, 'currency': 'INR',
+#                                        'payment_capture': '1'})
+#     for item in cart:
+#         total_price = total_price + item.item_iditem.item_price * item.item_qty
+    
+#     return JsonResponse({
+#         'total_price':total_price
+#     })
+
+
+
+
 
 def razorPayProcess(request):
-    u1 = User.objects.get(user_name=request.session['user_name'])
-    userId = u1.iduser
-    cart = Cart.objects.filter(user_iduser=userId)
-    total_price = 0
-    for item in cart:
-        total_price = total_price + item.item_iditem.item_price * item.item_qty
-    
-    return JsonResponse({
-        'total_price':total_price
-    })
+    if request.method == "POST":
+        # Retrieve user details
+        fname = request.POST.get('fname')
+        lname = request.POST.get('lname')
+        email = request.POST.get('email')
+        mobile = request.POST.get('mobile')
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        area = request.POST.get('area')
+        pincode = request.POST.get('pincode')
 
+        # Perform necessary validations
+
+        # Calculate order amount (assuming it's hardcoded for now)
+        amount = 5000  # Example amount in paisa (INR 50)
+
+        # Create order with Razorpay
+        razorpay_order = razorpay_client.order.create({
+            'amount': amount,
+            'currency': 'INR',
+            'payment_capture': '1'
+        })
+
+        # Perform additional logic such as saving order details to database, etc.
+
+        return JsonResponse({
+            'order_id': razorpay_order['id'],
+            'amount': razorpay_order['amount'],
+            'currency': razorpay_order['currency']
+        })
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 def orderpage(request):
     u1 = User.objects.get(user_name=request.session['user_name'])
     userId = u1.iduser

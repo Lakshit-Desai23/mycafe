@@ -8,22 +8,22 @@ import datetime
 
 # Create your models here.
 
-def filepath(request,filename):
-    old_filename = filename
-    return os.path.join('myImages/',old_filename)
+# def filepath(request,filename):
+#     old_filename = filename
+#     return os.path.join('myImages/',old_filename)
 
-def filepathItemCategory(request,filename):
-    old_filename = filename
-    return os.path.join('Item_Category/',old_filename)
+# def filepathItemCategory(request,filename):
+#     old_filename = filename
+#     return os.path.join('Item_Category/',old_filename)
     
-def filepathItem(request,filename):
-    old_filename = filename
-    return os.path.join('Item_images/',old_filename)
+# def filepathItem(request,filename):
+#     old_filename = filename
+#     return os.path.join('Item_images/',old_filename)
 
-def custome_validator(value):
-    valid_formats = ['png','jpeg','jpg']
-    if not any([True if value.name.endswith(i) else False for i in valid_formats]):
-        raise ValidationError(f'{value.name} is not a valid image formate!')
+# def custome_validator(value):
+#     valid_formats = ['png','jpeg','jpg']
+#     if not any([True if value.name.endswith(i) else False for i in valid_formats]):
+#         raise ValidationError(f'{value.name} is not a valid image formate!')
 
 class City(models.Model):
     idcity = models.AutoField(primary_key=True)
@@ -57,7 +57,7 @@ class Restaurant(models.Model):
     restaurant_email = models.CharField(max_length=45)
     restaurant_phone = models.DecimalField(max_digits=10, decimal_places=0,null=True)
     restaurant_description = models.CharField(max_length=200)
-    restaurant_image = models.ImageField(upload_to=filepath,null=True,blank=True)
+    restaurant_image = models.ImageField(upload_to="media/myImage/",null=True,blank=True)
     restaurant_address = models.CharField(max_length=500,null=True)
     area_pincode = models.ForeignKey(Area,on_delete=models.SET_NULL,null=True, db_column='area_pincode')
 
@@ -81,10 +81,10 @@ class User(models.Model):
     user_address = models.TextField(max_length=200,null=True)
     user_sec_question = models.CharField(max_length=60,null=True)
     user_sec_answer = models.CharField(max_length=60,null=True)
-    user_image = models.ImageField(upload_to=filepath,null=True,blank=True)
+    user_image = models.ImageField(upload_to="media/myImage/",null=True,blank=True)
     is_admin = models.IntegerField()
     forgot_password_token = models.CharField(max_length=100,default="")
-    pincode = models.ForeignKey(Area,null=True,on_delete=models.SET_NULL, db_column='area_pincode',default="")
+    pincode = models.ForeignKey(Area,null=True,on_delete=models.SET_NULL, db_column='area_pincode',default="000000")
     idrestaurant = models.ForeignKey(Restaurant,null=True,on_delete=models.SET_NULL, db_column='restaurant_idrestaurant')
 
     class Meta:
@@ -122,12 +122,10 @@ class ItemCategory(models.Model):
     item_category_name = models.CharField(max_length=60)
     slug = models.SlugField(max_length=250,null=True,blank=True)
     item_category_description = models.CharField(max_length=1000)
-    item_category_image = models.ImageField(upload_to=filepathItemCategory,null=True,blank=True)
-    restaurant_idrestaurant = models.ForeignKey(Restaurant, on_delete=models.SET_NULL, null=True, db_column='restaurant_idrestaurant')
+    item_category_image = models.ImageField(upload_to="media/Item_Category/",null=True,blank=True)
+    restaurant_idrestaurant = models.ForeignKey(Restaurant, on_delete=models.SET_NULL, null=True)
 
-    class Meta:
-        managed = True
-        db_table = 'item_category'
+   
     
     def __str__(self):
         return self.item_category_name
@@ -154,7 +152,7 @@ class Item(models.Model):
     item_price = models.IntegerField()
     offer_price = models.FloatField(default=0)
     item_description = models.CharField(max_length=200)
-    item_image = models.ImageField(upload_to=filepathItem,null=True,blank=True)
+    item_image = models.ImageField(upload_to="media/item_images/",null=True,blank=True)
     offer_idoffer = models.ForeignKey(Offer,on_delete=models.SET_NULL,null=True, db_column='offer_idoffer')
     item_category_iditem_category = models.ForeignKey(ItemCategory,on_delete=models.SET_NULL,null=True, db_column='item_category_iditem_category')
 

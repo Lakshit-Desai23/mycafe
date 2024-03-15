@@ -36,7 +36,10 @@ urlpatterns = [
     path('directly_change_password/',views.directly_change_pass,name='directly_change_password'),
     # Product related urls
     path('user_profile/',views.user_profile,name='user_profile'),
-    path('item_category_list/',views.CategoryListView.as_view(),name='item_category_list'),
+    # path('item_category_list/',views.CategoryListView.as_view(),name='item_category_list'),
+    path('item_category_list/',views.CategoryListView,name='item_category_list'),
+
+
     path('item_category_list/<slug:slug_text>/',views.ItemListView.as_view(),name='item'),
     path('item_category_list/<slug:cat_slug>/<slug:prod_slug>/',views.ItemDetails,name='itemDetails'),
     path('add-to-cart',views.addtocart,name='add-to-cart'),

@@ -232,52 +232,69 @@
     <h1 class="heading">Our Menu Items</h1>
 
     <div class="container box-container">
-         
+        {% for object in object_list %}
         <div class="box">
+            <img src="{{object.item_category_image.url}}" alt="">
+            <h3>{{object.item_category_name}}</h3>
+            <p>{{object.item_category_description}}</p>
+            <a href="{% url 'item' object.slug %}" class="link-btn">See Items</a>
+            <a href="#" class="link-btn">Read More</a>
+        </div>
+        {% empty %}
+        <h2>No item category found for "{{request.GET.q}}"! <br><br>
+            Suggestions : <br><br>
+            <ul style="line-height: 1.5;">
+                <li>Make sure that your word are correct!</li>
+                <li>Refine your search!</li>
+                <li>Try other keywords!</li>
+            </ul>
+        </h2>
+        {% endfor %}
+        {% comment %} <div class="box">
 
             <img src="{% static '/images/menu-1.jpg' %}" alt="">
             <h3>Blue Lagoon</h3>
-            <p>Juicy blue lagoon mocktail!<br/>Price : 90</p>
+            <p>Juicy blue lagoon mocktail!<br/>Price : 90</p> {% endcomment %}
             {% comment %} <a href="#" class="link-btn">Add to cart</a> {% endcomment %}
 
-        </div>
+        {% comment %} </div>
         <div class="box">
 
             <img src="{% static '/images/menu-2.jpg' %}" alt="">
             <h3>Guava Mojito</h3>
-            <p>Full-flavoured guava mojito! <br/>Price : 120</p>
+            <p>Full-flavoured guava mojito! <br/>Price : 120</p> {% endcomment %}
             {% comment %} <a href="#" class="link-btn">Add to cart</a> {% endcomment %}
 
-        </div>
+        {% comment %} </div>
         <div class="box">
 
             <img src="{% static '/images/menu-3.jpeg' %}" alt="">
             <h3>Kitkatoo Brownie</h3>
-            <p>Delicious kitkatoo brownie! <br/>Price : 125 With Wallnut : 145</p>
+            <p>Delicious kitkatoo brownie! <br/>Price : 125 With Wallnut : 145</p> {% endcomment %}
             {% comment %} <a href="#" class="link-btn">Add to cart</a> {% endcomment %}
 
-        </div>
+        {% comment %} </div>
         <div class="box">
 
             <img src="{% static '/images/menu-4.jpg' %}" alt="">
             <h3>Double Cheese Pizza</h3>
-            <p>Spicy double cheese pizza order now! <br/>Price(small) : 160 Price(medium) : 199</p>
+            <p>Spicy double cheese pizza order now! <br/>Price(small) : 160 Price(medium) : 199</p> {% endcomment %}
             {% comment %} <a href="#" class="link-btn">Add to cart</a> {% endcomment %}
 
-        </div>
+        {% comment %} </div>
         <div class="box">
 
             <img src="{% static '/images/menu-5.jpg' %}" alt="">
             <h3>Cheese Burger</h3>
-            <p>Yummy cheese burger!<br/>Price : 109</p>
+            <p>Yummy cheese burger!<br/>Price : 109</p> {% endcomment %}
             {% comment %} <a href="#" class="link-btn">Add to cart</a> {% endcomment %}
 
-        </div>
+        {% comment %} </div>
         <div class="box">
 
             <img src="{% static '/images/menu-6.jpg' %}" alt="">
             <h3>Mexican Pasta</h3>
-            <p>Delish mexican pasta! <br/>Price : 160</p>
+            <p>Delish mexican pasta! <br/>Price : 160</p> {% endcomment %}
             {% comment %} <a href="#" class="link-btn">Add to cart</a> {% endcomment %}
 
         </div> 

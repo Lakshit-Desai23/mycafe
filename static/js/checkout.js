@@ -20,10 +20,10 @@ $(document).ready(function () {
                 url: "/proceed-to-pay",
                 success: function (response) {
                     var options = {
-                        "key": "YOUR_KEY_ID",
+                        "key": "rzp_test_cvtTXHmj1tE4Hz",
                         "amount": "50000",
                         "currency": "INR",
-                        "name": "Acme Corp",
+                        "name": "Professional Cipher",
                         "description": "Test Transaction",
                         "image": "https://example.com/your_logo",
                         "order_id": "order_9A33XWu170gUtm",
